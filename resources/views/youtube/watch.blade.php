@@ -1,77 +1,67 @@
 @extends('layout.app')
 
 @section('content')
-<div class="px-6 py-6">
+<div class="px-6 py-6 bg-nova-dark min-h-screen text-nova-milk">
     <div class="grid grid-cols-12 gap-6">
 
-        <!-- VIDEO PLAYER -->
-        <div class="col-span-8">
+        <!-- MAIN VIDEO -->
+        <div class="col-span-12 lg:col-span-8">
 
             <!-- Player -->
-            <div class="aspect-video bg-black rounded-xl overflow-hidden">
+            <div class="aspect-video bg-black rounded-2xl overflow-hidden shadow-lg">
                 <iframe
-    class="w-full h-full"
-    src="https://www.youtube.com/embed/{{ $videoId }}"
-    frameborder="0"
-    allowfullscreen>
-</iframe>
-
+                    class="w-full h-full"
+                    src="https://www.youtube.com/embed/{{ $video['id'] }}"
+                    allowfullscreen>
+                </iframe>
             </div>
 
             <!-- Title -->
-            <h1 class="mt-4 text-lg font-semibold leading-snug">
-                Judul Video YouTube (Dummy Dulu)
+            <h1 class="mt-4 text-xl text-[#e7d7ad] font-semibold leading-snug">
+                {{ $video['snippet']['title'] }}
             </h1>
 
-            <!-- Channel & Action -->
-            <div class="mt-3 flex items-center justify-between">
-
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
-                    <div>
-                        <p class="text-sm font-medium">Nama Channel</p>
-                        <p class="text-xs text-gray-500">1,2 jt subscriber</p>
-                    </div>
-                </div>
-
-                <button class="px-4 py-2 bg-black text-white rounded-full text-sm">
-                    Subscribe
-                </button>
+            <!-- Channel -->
+            <div class="mt-2 text-sm  text-[#98971a]">
+                {{ $video['snippet']['channelTitle'] }}
             </div>
 
             <!-- Description -->
-            <div class="mt-4 bg-gray-100 rounded-xl p-4 text-sm text-gray-700">
-                Deskripsi video akan muncul di sini.  
-                Ini masih dummy supaya fokus ke layout dulu.
+            <div class="mt-4 bg-[#2e2e2e] text-[#e7d7ad] rounded-xl p-4 text-sm text-nova-milk/90 whitespace-pre-line">
+                {{ $video['snippet']['description'] }}
             </div>
 
         </div>
 
         <!-- SIDEBAR RECOMMENDED -->
-        <div class="col-span-4 space-y-4">
+        <div class="col-span-12 lg:col-span-4 space-y-4">
 
-            @for ($i = 0; $i < 8; $i++)
-            <div class="flex gap-3 cursor-pointer">
+            @foreach ($related as $item)
+                <a
+                    href="{{ route('youtube.show', $item['id']['videoId']) }}"
+                    class="flex gap-3 group rounded-xl p-2 hover:bg-[#2e2e2e] transition"
+                >
 
-                <div class="w-40 aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                    <img
-                        src="https://picsum.photos/320/180?random={{ $i }}"
-                        class="w-full h-full object-cover"
-                    >
-                </div>
+                    <!-- Thumbnail -->
+                    <div class="w-40 aspect-video rounded-lg overflow-hidden bg-black flex-shrink-0">
+                        <img
+                            src="{{ $item['snippet']['thumbnails']['medium']['url'] }}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
 
-                <div>
-                    <p class="text-sm font-semibold line-clamp-2">
-                        Video Rekomendasi Mirip YouTube
-                    </p>
-                    <p class="text-xs text-gray-600 mt-1">Nama Channel</p>
-                    <p class="text-xs text-gray-500">
-                        500 rb x ditonton
-                    </p>
-                </div>
+                    <!-- Info -->
+                    <div class="flex flex-col gap-1">
+                        <p class="text-sm font-semibold line-clamp-2 text-[#e7d7ad] group-hover:text-nova-yellow transition">
+                            {{ $item['snippet']['title'] }}
+                        </p>
 
-            </div>
-            @endfor
+                        <p class="text-xs text-[#98971a]">
+                            {{ $item['snippet']['channelTitle'] }}
+                        </p>
+                    </div>
+
+                </a>
+            @endforeach
 
         </div>
 

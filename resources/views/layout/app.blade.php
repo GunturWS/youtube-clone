@@ -2,56 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PRONTUB</title>
+    <title>WowTube</title>
     @vite('resources/css/app.css')
 </head>
 
 <body class="bg-[#0F0F0F] text-white">
 
-    {{-- NAVBAR --}}
-    @include('partials.navbar')
-
-    {{-- SIDEBAR --}}
-    @include('partials.sidebar')
-
-    {{-- MAIN CONTENT --}}
-    <main
-        id="mainContent"
-        class="pt-16 ml-60 transition-all duration-300"
-    >
+    @if(Request::is('login') || Request::is('register'))
+        {{-- Tampilkan login/register tanpa navbar dan sidebar --}}
         @yield('content')
-    </main>
+    @else
+        {{-- Tampilkan layout normal dengan navbar dan sidebar --}}
+        {{-- NAVBAR --}}
+        @include('partials.navbar')
 
-    {{-- GLOBAL SIDEBAR SCRIPT --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            const main = document.getElementById('mainContent');
+        {{-- SIDEBAR --}}
+        @include('partials.sidebar')
 
-            if (!sidebar || !toggle || !main) return;
+        {{-- MAIN CONTENT --}}
+        <main
+            id="mainContent"
+            class="pt-16 ml-60 transition-all duration-300"
+        >
+            @yield('content')
+        </main>
 
-            let isOpen = true;
+        {{-- GLOBAL SIDEBAR SCRIPT --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const sidebar = document.getElementById('sidebar');
+                const toggle = document.getElementById('sidebarToggle');
+                const main = document.getElementById('mainContent');
 
-            toggle.addEventListener('click', () => {
-                isOpen = !isOpen;
+                if (!sidebar || !toggle || !main) return;
 
-                if (isOpen) {
-                    sidebar.classList.remove('-translate-x-full');
-                    sidebar.classList.add('translate-x-0');
+                let isOpen = true;
 
-                    main.classList.add('ml-60');
-                    main.classList.remove('ml-0');
-                } else {
-                    sidebar.classList.add('-translate-x-full');
-                    sidebar.classList.remove('translate-x-0');
+                toggle.addEventListener('click', () => {
+                    isOpen = !isOpen;
 
-                    main.classList.remove('ml-60');
-                    main.classList.add('ml-0');
-                }
+                    if (isOpen) {
+                        sidebar.classList.remove('-translate-x-full');
+                        sidebar.classList.add('translate-x-0');
+
+                        main.classList.add('ml-60');
+                        main.classList.remove('ml-0');
+                    } else {
+                        sidebar.classList.add('-translate-x-full');
+                        sidebar.classList.remove('translate-x-0');
+
+                        main.classList.remove('ml-60');
+                        main.classList.add('ml-0');
+                    }
+                });
             });
-        });
-    </script>
+        </script>
+    @endif
 
 </body>
 </html>

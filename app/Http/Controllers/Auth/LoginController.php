@@ -21,38 +21,23 @@ class LoginController extends Controller
      * Handle a login request to the application.
      */
     public function login(Request $request)
-    {
-        // Validate the request
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        // If validation fails, return back with errors
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        // Attempt to log the user in
-        $credentials = $request->only('email', 'password');
-        $remember = $request->has('remember');
-
-        if (Auth::attempt($credentials, $remember)) {
-            // Regenerate session to prevent session fixation
-            $request->session()->regenerate();
-
-            // Redirect to intended URL or home
-            return redirect()->intended(route('home'))
-                ->with('success', 'Welcome back!');
-        }
-
-        // If authentication fails, return back with error
-        return redirect()->back()
-            ->withErrors(['email' => 'The provided credentials do not match our records.'])
-            ->withInput($request->only('email', 'remember'));
+    if (Auth::attempt($credentials, $request->remember)) {
+        $request->session()->regenerate();
+        
+        // Redirect ke youtube.index
+        return redirect()->route('youtube.index')->with('success', 'Login successful!');
     }
+
+    return back()->withErrors([
+        'email' => 'The provided credentials do not match our records.',
+    ])->onlyInput('email');
+}
 
     /**
      * Log the user out of the application.

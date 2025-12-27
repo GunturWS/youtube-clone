@@ -23,33 +23,22 @@ class RegisterController extends Controller
      * Handle a registration request for the application.
      */
     public function register(Request $request)
-    {
-        // Validate the request
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
 
-        // If validation fails, return back with errors
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
 
-        // Create the user
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    Auth::login($user);
 
-        // Log the user in
-        Auth::login($user);
-
-        // Redirect to home with success message
-        return redirect()->route('home')
-            ->with('success', 'Registration successful! Welcome to YouTube Clone!');
-    }
+    // Redirect ke youtube.index
+    return redirect()->route('youtube.index')->with('success', 'Registration successful! Welcome to PRONTUB!');
+}
 }

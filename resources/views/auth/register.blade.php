@@ -247,12 +247,13 @@
 
             <!-- Back Link -->
             <div class="mt-4 text-center">
-                <a href="/" class="inline-flex items-center text-gray-500 hover:text-gray-300 text-sm transition-colors">
-                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Return to homepage
-                </a>
+                <!-- Ganti semua '/' dengan route('youtube.index') -->
+<a href="{{ route('youtube.index') }}" class="inline-flex items-center text-[#b3b3b3] hover:text-white transition-colors duration-200 group">
+    <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+    </svg>
+    Back to homepage
+</a>
             </div>
         </div>
     </div>

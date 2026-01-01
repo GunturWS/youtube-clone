@@ -68,4 +68,36 @@ class ProfileController extends Controller
 
         return redirect('/')->with('success', 'Your account has been deleted.');
     }
+
+    // ProfileController
+public function dashboard()
+{
+    $stats = [
+        'liked_videos' => auth()->user()->likes()->count(),
+        'subscriptions' => auth()->user()->subscriptions()->count(),
+        'playlists' => auth()->user()->playlists()->count(),
+    ];
+    
+    return view('profile.dashboard', compact('stats'));
+}
+
+    public function myComments()
+    {
+     $comments = auth()->user()
+            ->comments()
+            ->with(['replies'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+    
+    return view('profile.comments', compact('comments'));
+    }
+    public function subscriptions()
+{
+    $subscriptions = auth()->user()
+        ->subscriptions()
+        ->orderBy('created_at', 'desc')
+        ->paginate(12);
+    
+    return view('profile.subscriptions', compact('subscriptions'));
+}
 }

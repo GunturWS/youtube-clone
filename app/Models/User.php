@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +14,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     protected $hidden = [
@@ -26,53 +26,98 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // ✅ TAMBAHKAN RELASI KE LIKE
+    /*
+    |--------------------------------------------------------------------------
+    | RELATIONSHIPS
+    |--------------------------------------------------------------------------
+    */
+
+    // Like video
     public function likes()
     {
         return $this->hasMany(Like::class);
     }
 
-    // ✅ TAMBAHKAN RELASI KE SUBSCRIPTION
+    // Subscription (user subscribe channel)
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class, 'subscriber_id');
     }
 
-    // ✅ CHECK APAKAH USER SUDAH LIKE VIDEO TERTENTU
+    // Comment
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function commentLikes()
+    {
+        return $this->hasMany(CommentLike::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SUBSCRIPTION LOGIC (SESUAI CONTROLLER)
+    |--------------------------------------------------------------------------
+    */
+
+    // ✅ Subscribe ke channel
+    public function subscribeToChannel($channelId, $channelName, $channelThumbnail = null)
+    {
+        return $this->subscriptions()->create([
+            'channel_id' => $channelId,
+            'channel_name' => $channelName,
+            'channel_thumbnail' => $channelThumbnail,
+        ]);
+    }
+
+    // ✅ Check apakah user sudah subscribe channel tertentu
+    public function isSubscribedTo($channelId)
+    {
+        return $this->subscriptions()
+            ->where('channel_id', $channelId)
+            ->exists();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | LIKE LOGIC
+    |--------------------------------------------------------------------------
+    */
+
+    // Check apakah user sudah like video tertentu
     public function hasLiked($videoId)
     {
-        return $this->likes()->where('video_id', $videoId)->exists();
+        return $this->likes()
+            ->where('video_id', $videoId)
+            ->exists();
     }
 
-    // ✅ CHECK APAKAH USER SUDAH SUBSCRIBE CHANNEL TERTENTU
-    public function hasSubscribed($channelId)
-    {
-        return $this->subscriptions()->where('channel_id', $channelId)->exists();
-    }
-
-    // ✅ GET LIKED VIDEOS (untuk profile page)
+    // Get liked videos
     public function getLikedVideos()
     {
-        return $this->likes()->with('video')->get()->pluck('video');
+        return $this->likes()
+            ->with('video')
+            ->get()
+            ->pluck('video');
     }
 
-    // ✅ GET SUBSCRIBED CHANNELS (untuk profile page)
-    public function getSubscribedChannels()
-    {
-        return $this->subscriptions()->get();
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | OPTIONAL HELPERS
+    |--------------------------------------------------------------------------
+    */
 
-    // ✅ OPTIONAL: TAMBAHKAN ATTRIBUTE PROFILE PICTURE
+    // Profile picture (Gravatar)
     public function getProfilePictureAttribute()
     {
-        // Gunakan gravatar atau upload custom
         $hash = md5(strtolower(trim($this->email)));
         return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=200";
     }
 
-    // ✅ OPTIONAL: TAMBAHKAN ROLE JIKA PERLU (user/admin)
+    // Role check
     public function isAdmin()
     {
-        return $this->role === 'admin'; // tambah kolom 'role' di tabel users jika perlu
+        return $this->role === 'admin';
     }
 }

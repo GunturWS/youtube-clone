@@ -15,6 +15,7 @@
         {{-- Tampilkan layout normal dengan navbar dan sidebar --}}
         {{-- NAVBAR --}}
         @include('partials.navbar')
+        
 
         {{-- SIDEBAR --}}
         @include('partials.sidebar')

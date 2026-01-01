@@ -6,25 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
-{
-    Schema::create('subscriptions', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('subscriber_id')->constrained('users')->onDelete('cascade');
-        $table->string('channel_id'); // YouTube channel ID
-        $table->timestamps();
-        
-        $table->unique(['subscriber_id', 'channel_id']);
-    });
-}
+    {
+        Schema::create('subscriptions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('channel_id');
+            $table->string('channel_name');
+            $table->string('channel_thumbnail')->nullable();
+            $table->timestamps();
+            
+            $table->unique(['user_id', 'channel_id']); // Prevent duplicate subscriptions
+            $table->index('channel_id');
+        });
+    }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('subscriptions');
     }

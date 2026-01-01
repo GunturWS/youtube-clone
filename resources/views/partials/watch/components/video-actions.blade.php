@@ -159,17 +159,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Notification function
 function showNotification(message, type = 'success') {
-    // Buat elemen notifikasi
+
     const notification = document.createElement('div');
     notification.className = `fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 ${
         type === 'error' ? 'bg-red-600' : 'bg-green-600'
     } text-white`;
     notification.textContent = message;
     
-    // Tambahkan ke body
+
     document.body.appendChild(notification);
     
-    // Hapus setelah 3 detik
     setTimeout(() => {
         notification.remove();
     }, 3000);

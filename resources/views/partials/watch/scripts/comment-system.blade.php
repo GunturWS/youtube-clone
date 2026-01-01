@@ -271,7 +271,7 @@ function submitReply(event, commentId) {
         if (data.success) {
             input.value = '';
             hideReplyForm(commentId);
-            // Reload comments to show new reply
+      
             currentCommentPage = 1;
             loadComments();
             showNotification('Reply added!');

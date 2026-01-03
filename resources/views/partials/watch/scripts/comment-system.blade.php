@@ -269,7 +269,7 @@ function submitReply(event, commentId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            input.value = '';
+            input.value = ''; 
             hideReplyForm(commentId);
       
             currentCommentPage = 1;

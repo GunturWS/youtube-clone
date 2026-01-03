@@ -47,7 +47,7 @@
             </a>
             
             <!-- My Subscriptions -->
-            {{-- <a 
+        <a 
                 href="{{ route('profile.subscriptions') }}" 
                 class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[#272727] transition-colors group/menu"
             >
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <span class="text-gray-300 group-hover/menu:text-white transition-colors">My Subscriptions</span>
-            </a> --}}
+            </a> 
             
             <!-- Subscription Feed -->
             {{-- <a 
